@@ -11,6 +11,7 @@ const config: Config = {
       colors: {
         primary: "#2563EB",
         "primary-dark": "#1349bd",
+        "primary-lighter": "#cbd5e1",
         error: "#FF0000",
       },
       backgroundImage: {
