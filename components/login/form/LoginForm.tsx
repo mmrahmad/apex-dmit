@@ -40,7 +40,7 @@ const LoginForm = () => {
         control={control}
         isRequired
       />
-      <Button type="button" className="mt-4">
+      <Button type="button" className="mt-4 px-7 py-3 font-semibold">
         Sign in
       </Button>
     </form>
