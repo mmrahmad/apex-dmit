@@ -1,0 +1,15 @@
+# Ignore generated files
+node_modules
+.next
+.cache
+build
+dist
+
+# Ignore third-party libraries
+**/node_modules/**
+
+# Ignore specific files
+.eslintrc.js
+.prettierrc.js
+package-lock.json
+package.json
