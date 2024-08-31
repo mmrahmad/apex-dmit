@@ -18,3 +18,8 @@ export type TestimonialType = {
   comment: string;
   author: authorType;
 };
+
+export interface AuthUserInterface {
+  access_token: string;
+  id: number;
+}
