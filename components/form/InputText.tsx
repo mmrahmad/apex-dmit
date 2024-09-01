@@ -21,7 +21,7 @@ const InputText = <TFieldValues extends FieldValues>({
   isRequired = false,
 }: Props<TFieldValues>) => {
   return (
-    <div className="mb-5">
+    <div className="mb-5 text-left">
       {label && (
         <label htmlFor={name} className="mb-2 block">
           {label}

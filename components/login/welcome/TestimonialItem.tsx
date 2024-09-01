@@ -9,7 +9,7 @@ interface Props {
 const TestimonialItem: React.FC<Props> = ({ data }) => {
   return (
     <div>
-      <div className="mb-5 flex items-center gap-2">
+      <div className="mb-5 flex items-center justify-center gap-2 md:justify-start">
         {Array.from({ length: data.rating }).map((_, idx) => (
           <Image
             key={idx}
@@ -21,7 +21,7 @@ const TestimonialItem: React.FC<Props> = ({ data }) => {
         ))}
       </div>
       <p>{data.comment}</p>
-      <div className="mt-5 flex items-center gap-2">
+      <div className="mt-5 flex items-center justify-center gap-2 md:justify-start">
         <Image
           src={data.author.avatar}
           alt={data.author.name}

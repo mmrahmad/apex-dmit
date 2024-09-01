@@ -19,7 +19,7 @@ const LoginPage = () => {
   ];
   return (
     <main className="login-page">
-      <div className="container grid h-full min-h-screen grid-cols-2 items-center justify-center gap-8">
+      <div className="container grid h-full min-h-screen items-center justify-center gap-8 md:grid-cols-2">
         <WelcomeSection testimonials={testimonials} />
         <FormSection />
       </div>

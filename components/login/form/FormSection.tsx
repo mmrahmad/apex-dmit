@@ -3,7 +3,7 @@ import LoginForm from "./LoginForm";
 
 const FormSection = () => {
   return (
-    <section className="pl-20 pr-28">
+    <section className="w-full px-8 text-center md:pl-20 md:pr-28 md:text-left">
       <div className="mb-[10vh]">
         <h2 className="text-gray-900">Welcome back!</h2>
         <p>
