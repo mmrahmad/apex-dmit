@@ -1,0 +1,20 @@
+{
+    "material_purchase": [
+        {
+            "line_item_name": "Cement",
+            "store": "ABC Hardware",
+            "runners_name": "John Doe",
+            "amount": 1500.75,
+            "card_number": 12345,
+            "transaction_date": "08-28-2024"
+        },
+        {
+            "line_item_name": "Bricks",
+            "store": "XYZ Supplies",
+            "runners_name": "Jane Smith",
+            "amount": 300.25,
+            "card_number": 67890,
+            "transaction_date": "08-25-2024"
+        }
+    ]
+}

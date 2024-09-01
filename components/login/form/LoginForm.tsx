@@ -2,6 +2,7 @@
 
 import { InputText } from "#/components/form";
 import { Button } from "#/components/ui";
+import { setUser } from "#/lib/slices/authSlice";
 import type { LoginFormValues } from "#/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
@@ -42,6 +43,7 @@ const LoginForm = () => {
       console.log({ response });
 
       if (response.status >= 200 && response.status <= 300) {
+        setUser(response?.data);
       }
     } catch (error) {
       console.error(error);

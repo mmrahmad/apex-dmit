@@ -37,7 +37,7 @@ const InputText = <TFieldValues extends FieldValues>({
             <input
               {...field}
               type={type}
-              className="w-full rounded-lg border border-gray-300 p-3 focus:border-primary focus:outline-none"
+              className="w-full rounded-lg border border-gray-300 p-2 focus:border-primary focus:outline-none"
             />
             {error && <p className="text-error">{error?.message}</p>}
           </Fragment>

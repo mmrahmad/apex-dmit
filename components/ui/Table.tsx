@@ -50,7 +50,7 @@ const Table: React.FC<Props> = ({ columns: defaultColumns, data }) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
               key={headerGroup.id}
-              className="lg:px-7.5 rounded-t bg-primary px-5 py-4 2xl:px-11"
+              className="lg:px-7.5 rounded-t bg-primary/60 px-5 py-4 2xl:px-11"
             >
               <th className="border-x border-x-white/30 px-2 py-1 text-left font-medium text-white">
                 SL
@@ -143,31 +143,6 @@ const Table: React.FC<Props> = ({ columns: defaultColumns, data }) => {
             {table.getPageCount()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="w-16 rounded border p-1"
-          />
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value));
-          }}
-          className="rounded p-2"
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
   );

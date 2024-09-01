@@ -22,4 +22,6 @@ export type TestimonialType = {
 export interface AuthUserInterface {
   access_token: string;
   id: number;
+  email: string;
+  avatar?: string;
 }

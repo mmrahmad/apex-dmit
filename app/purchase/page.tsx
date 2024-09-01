@@ -1,7 +1,8 @@
+import PurchasePage from "#/components/purchase/PurchasePage";
 import React from "react";
 
 const page = () => {
-  return <div>page</div>;
+  return <PurchasePage />;
 };
 
 export default page;
