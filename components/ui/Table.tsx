@@ -74,7 +74,10 @@ const Table: React.FC<Props> = ({ columns: defaultColumns, data }) => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row, rowIdx) => (
-            <tr key={row.id} className="border-b border-b-zinc-300">
+            <tr
+              key={row.id}
+              className="border-b border-b-zinc-300 even:bg-primary/10"
+            >
               <td className="dark:text-bodydark p-2 text-[#637381]">
                 {rowIdx + 1}
               </td>
