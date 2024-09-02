@@ -9,6 +9,7 @@ interface Props<TFieldValues extends FieldValues> {
   type?: React.HTMLInputTypeAttribute;
   defaultValue?: any;
   isRequired?: boolean;
+  isNoSpace?: boolean;
 }
 
 // =======> Main Function <======= //
@@ -19,9 +20,10 @@ const InputText = <TFieldValues extends FieldValues>({
   type = "text",
   defaultValue,
   isRequired = false,
+  isNoSpace = false,
 }: Props<TFieldValues>) => {
   return (
-    <div className="mb-5 text-left">
+    <div className={`${isNoSpace ? "" : "mb-5"} text-left`}>
       {label && (
         <label htmlFor={name} className="mb-2 block">
           {label}

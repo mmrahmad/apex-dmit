@@ -15,10 +15,9 @@ interface Props {
   title: string;
   children: React.ReactNode;
   onClose: () => void;
-  onSave: () => void;
 }
 
-const Modal: React.FC<Props> = ({ open, title, children, onClose, onSave }) => {
+const Modal: React.FC<Props> = ({ open, title, children, onClose }) => {
   const modalBodyRef = useRef(null);
   useOnClickOutside(modalBodyRef, onClose);
   return (
@@ -29,17 +28,13 @@ const Modal: React.FC<Props> = ({ open, title, children, onClose, onSave }) => {
     >
       <div
         ref={modalBodyRef}
-        className="relative mx-auto max-h-full w-full max-w-[916px] p-4"
+        className="relative mx-auto max-h-full w-full max-w-[1200px] p-4"
       >
         <div className="relative rounded-lg bg-white shadow">
           <div className="rounded-t-lg border-b bg-primary px-4 py-2 text-white dark:border-gray-600">
             <h3 className="text-center text-xl font-semibold">{title}</h3>
           </div>
           <div className="space-y-4 p-4 md:p-5">{children}</div>
-
-          <div className="flex items-center justify-end rounded-b-lg border-b-[15px] border-primary p-4 md:p-5">
-            <Button>Save</Button>
-          </div>
         </div>
       </div>
     </div>

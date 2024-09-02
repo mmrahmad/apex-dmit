@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import Table from "../ui/Table";
-import { ColumnDef } from "@tanstack/react-table";
-import { Button, Modal } from "../ui";
 import purchaseMockData from "#/__MOCK__/purchase.json";
+import { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
+import { Button, Modal } from "../ui";
+import FormTable from "../ui/FormTable";
+import Table from "../ui/Table";
+import CreatePurchaseModal from "./CreatePurchaseModal";
 
 const PurchasePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,7 +45,6 @@ const PurchasePage = () => {
   ];
 
   const onClose = () => setIsModalOpen(false);
-  const onSave = () => {};
   return (
     <div>
       <div className="flex items-center justify-between p-5">
@@ -52,16 +53,8 @@ const PurchasePage = () => {
           Add Material Purchase
         </Button>
       </div>
-      <Modal
-        open={isModalOpen}
-        title="Material Purchase"
-        onSave={onSave}
-        onClose={onClose}
-      >
-        <Table
-          columns={defaultColumns}
-          data={purchaseMockData.material_purchase}
-        />
+      <Modal open={isModalOpen} title="Material Purchase" onClose={onClose}>
+        <CreatePurchaseModal />
       </Modal>
       <Table
         columns={defaultColumns}

@@ -1,9 +1,11 @@
-"use client";
-
 import flatpickr from "flatpickr";
 import { useEffect } from "react";
 
-const DatePicker = () => {
+interface Props {
+  label?: string;
+}
+
+const DatePicker: React.FC<Props> = ({ label }) => {
   useEffect(() => {
     // Init flatpickr
     flatpickr(".form-datepicker", {
@@ -20,12 +22,14 @@ const DatePicker = () => {
 
   return (
     <div>
-      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-        Date picker
-      </label>
+      {!!label && (
+        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+          {label}
+        </label>
+      )}
       <div className="relative">
         <input
-          className="form-datepicker border-stroke dark:border-form-strokedark dark:bg-form-input w-full rounded border-[1.5px] bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:focus:border-primary"
+          className="form-datepicker border-stroke dark:border-form-strokedark dark:bg-form-input w-full rounded border-[1.5px] bg-transparent px-3 py-2 font-normal outline-none transition focus:border-primary active:border-primary dark:focus:border-primary"
           placeholder="mm/dd/yyyy"
           data-class="flatpickr-right"
         />

@@ -1,3 +1,4 @@
+import { ColumnDef } from "@tanstack/react-table";
 import { number } from "yup";
 
 // ----------------------- Login Page ------------------ //
@@ -25,3 +26,20 @@ export interface AuthUserInterface {
   email: string;
   avatar?: string;
 }
+
+export interface MaterialPurchaseInterface {
+  line_item_name: string;
+  store: string;
+  runners_name: string;
+  amount: number;
+  card_number: number;
+  transaction_date: string;
+}
+export interface PurchaseFormValuesInterface {
+  material_purchase?: MaterialPurchaseInterface[];
+}
+
+export type CustomColumnDef<T> = ColumnDef<T> & {
+  accessorKey: string;
+  inputType?: "text" | "number" | "date";
+};
