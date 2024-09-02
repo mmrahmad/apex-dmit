@@ -1,17 +1,22 @@
 "use client";
 
-import { InputText } from "#/components/form";
+import { InputText } from "#/components/form-elements";
 import { Button } from "#/components/ui";
 import { setUser } from "#/lib/slices/authSlice";
-import type { LoginFormValues } from "#/types";
+import { useAppDispatch, useAppSelector } from "#/lib/storeHooks";
+import type { AuthResponseInterface, LoginFormValues } from "#/types";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import axios, { AxiosResponse } from "axios";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 // =======> Main Function <======= //
 const LoginForm = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { data } = useAppSelector((state) => state.auth);
   // ................ STATES ................ //
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,21 +41,26 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "https://devapi.propsoft.ai/interview/login",
-        data,
-      );
-      console.log({ response });
+      const response = await axios.post<
+        LoginFormValues,
+        AxiosResponse<AuthResponseInterface>
+      >("https://devapi.propsoft.ai/api/interview/login", data);
 
       if (response.status >= 200 && response.status <= 300) {
-        setUser(response?.data);
+        const { status_code, status_message, ...rest } = response?.data;
+
+        dispatch(setUser(rest));
+        router.push("/purchase");
       }
     } catch (error) {
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useLayoutEffect(() => {
+    if (!!data?.access_token) redirect("/purchase");
+  }, [data?.access_token]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

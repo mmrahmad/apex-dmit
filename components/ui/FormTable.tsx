@@ -8,7 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import React from "react";
-import { InputText } from "../form";
+import { InputText } from "../form-elements";
 import {
   Control,
   FieldValues,
@@ -23,7 +23,7 @@ import {
   MaterialPurchaseInterface,
   PurchaseFormValuesInterface,
 } from "#/types";
-import DatePicker from "../form/DatePicker";
+import DatePicker from "../form-elements/DatePicker";
 
 interface Props<TFieldValues extends FieldValues> {
   columns: ColumnDef<any>[];
@@ -32,6 +32,7 @@ interface Props<TFieldValues extends FieldValues> {
   control: Control<TFieldValues, any>;
   remove: UseFieldArrayRemove;
   append: UseFieldArrayAppend<PurchaseFormValuesInterface, "material_purchase">;
+  setValue: any;
 }
 
 const FormTable = <TFieldValues extends FieldValues>({
@@ -41,6 +42,7 @@ const FormTable = <TFieldValues extends FieldValues>({
   namePrefix,
   remove,
   append,
+  setValue,
 }: Props<TFieldValues>) => {
   const [columns] = React.useState<typeof defaultColumns>(() => [
     ...defaultColumns,
@@ -109,7 +111,6 @@ const FormTable = <TFieldValues extends FieldValues>({
                     key={cell.id}
                     className="dark:text-bodydark p-2 text-[#637381]"
                   >
-                    <p>{column?.inputType}</p>
                     {column?.inputType === "text" ||
                     column?.inputType === "number" ? (
                       <InputText
@@ -122,7 +123,13 @@ const FormTable = <TFieldValues extends FieldValues>({
                         isRequired
                       />
                     ) : column?.inputType === "date" ? (
-                      <DatePicker />
+                      <DatePicker
+                        control={control}
+                        name={
+                          `${namePrefix}.${rowIdx}.${column?.accessorKey}` as Path<TFieldValues>
+                        }
+                        setValue={setValue}
+                      />
                     ) : null}
                   </td>
                 );

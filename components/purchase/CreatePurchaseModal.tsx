@@ -11,31 +11,58 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import purchaseMockData from "#/__MOCK__/purchase.json";
 import { Button } from "../ui";
+import axios, { AxiosResponse } from "axios";
+import { useAppSelector } from "#/lib/storeHooks";
+import { toast } from "react-hot-toast";
 
 const CreatePurchaseModal = () => {
+  const { data: authData } = useAppSelector((state) => state.auth);
   // ................ STATES ................ //
   const [isLoading, setIsLoading] = useState(false);
 
   // ................ SCHEMA ................ //
   const schema = Yup.object().shape({
-    material_purchase: Yup.array().of(
-      Yup.object().shape({
-        line_item_name: Yup.string().required("Item name is required"),
-        store: Yup.string().required("Store name is required"),
-        runners_name: Yup.string().required("Runner's name is required"),
-        amount: Yup.number()
-          .typeError("Amount must be number value")
-          .required("Amount is required"),
-        card_number: Yup.number()
-          .typeError("Card number must be number value")
-          .required("Card number is required"),
-        transaction_date: Yup.string().required("Transaction date is required"),
-      }),
-    ),
+    material_purchase: Yup.array()
+      .of(
+        Yup.object().shape({
+          line_item_name: Yup.string()
+            .max(200, "Item name can not be more than 200 characters")
+            .required("Item name is required"),
+          store: Yup.string()
+            .max(200, "Item name can not be more than 200 characters")
+            .required("Store name is required"),
+          runners_name: Yup.string()
+            .max(200, "Item name can not be more than 200 characters")
+            .required("Runner's name is required"),
+          amount: Yup.number()
+            .typeError("Amount must be number value")
+            .required("Amount is required"),
+          card_number: Yup.number()
+            .typeError("Card number must be number value")
+            .required("Card number is required")
+            .test(
+              "len",
+              "The card number used for the purchase. Must be exactly 5 digits",
+              (val) => !!val && String(val).length === 5,
+            )
+            .positive("Must be a positive number")
+            .integer("Must be an integer"),
+          transaction_date: Yup.string().required(
+            "Transaction date is required",
+          ),
+        }),
+      )
+      .required("Must contain at least one item"),
   });
 
   // ................ HOOKS ................ //
-  const { control, handleSubmit } = useForm<PurchaseFormValuesInterface>({
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm<PurchaseFormValuesInterface>({
     defaultValues: {
       material_purchase: [{} as MaterialPurchaseInterface],
     },
@@ -87,7 +114,33 @@ const CreatePurchaseModal = () => {
   ];
 
   const onSubmit: SubmitHandler<PurchaseFormValuesInterface> = async (data) => {
-    console.log(data);
+    setIsLoading(true);
+    try {
+      const response = await axios.post<
+        PurchaseFormValuesInterface,
+        AxiosResponse<any>
+      >(
+        "https://devapi.propsoft.ai/api/auth/interview/material-purchase",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${authData?.access_token}`,
+          },
+        },
+      );
+
+      if (
+        response.status >= 200 &&
+        response.status <= 300 &&
+        response.data?.status_code === "1"
+      ) {
+        toast.success("Successfully created");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -99,6 +152,7 @@ const CreatePurchaseModal = () => {
         namePrefix="material_purchase"
         append={append}
         remove={remove}
+        setValue={setValue}
       />
       <div className="flex justify-end">
         <Button type="submit">Save</Button>

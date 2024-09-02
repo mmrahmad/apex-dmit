@@ -1,14 +1,20 @@
 "use client";
 
-import purchaseMockData from "#/__MOCK__/purchase.json";
+import { RootState } from "#/lib/store";
+import { useAppSelector } from "#/lib/storeHooks";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal } from "../ui";
-import FormTable from "../ui/FormTable";
 import Table from "../ui/Table";
 import CreatePurchaseModal from "./CreatePurchaseModal";
+import axios from "axios";
+import { log } from "console";
 
 const PurchasePage = () => {
+  const { data } = useAppSelector((state: RootState) => state.auth);
+
+  const [materialPurchaseData, setMaterialPurchaseData] = useState<any>();
+  const [refetch, setRefetch] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const defaultColumns: ColumnDef<any>[] = [
@@ -45,6 +51,27 @@ const PurchasePage = () => {
   ];
 
   const onClose = () => setIsModalOpen(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://devapi.propsoft.ai/api/auth/interview/material-purchase",
+        {
+          headers: {
+            Authorization: `Bearer ${data?.access_token}`,
+          },
+        },
+      );
+      console.log({ response });
+    } catch (error) {
+      console.error({ error });
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [refetch]);
+
   return (
     <div>
       <div className="flex items-center justify-between p-5">
@@ -56,11 +83,7 @@ const PurchasePage = () => {
       <Modal open={isModalOpen} title="Material Purchase" onClose={onClose}>
         <CreatePurchaseModal />
       </Modal>
-      <Table
-        columns={defaultColumns}
-        data={purchaseMockData.material_purchase}
-      />
-      ;
+      <Table columns={defaultColumns} data={[]} />
     </div>
   );
 };
