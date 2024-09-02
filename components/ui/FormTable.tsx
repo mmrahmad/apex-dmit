@@ -85,7 +85,7 @@ const FormTable = <TFieldValues extends FieldValues>({
                 <th
                   key={header.id}
                   colSpan={header.colSpan}
-                  className="border-x border-x-white/30 px-2 py-1 text-left font-medium text-white"
+                  className="border-x border-x-white/30 px-2 py-3 text-center font-medium text-white"
                 >
                   {header.isPlaceholder
                     ? null
@@ -100,10 +100,7 @@ const FormTable = <TFieldValues extends FieldValues>({
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row, rowIdx) => (
-            <tr
-              key={row.id}
-              className="border-b border-b-zinc-300 even:bg-[#F4F7FC]"
-            >
+            <tr key={row.id} className="even:bg-[#F4F7FC]">
               {row.getVisibleCells().map((cell) => {
                 const column = cell.column.columnDef as CustomColumnDef<any>;
                 return (
@@ -134,9 +131,12 @@ const FormTable = <TFieldValues extends FieldValues>({
                   </td>
                 );
               })}
-              {rowIdx > 0 && (
-                <td>
-                  <RiDeleteBin6Line onClick={() => remove(rowIdx)} />
+              {table.getRowModel().rows.length > 1 && (
+                <td className="bg-white">
+                  <RiDeleteBin6Line
+                    className="cursor-pointer text-lg hover:text-error"
+                    onClick={() => remove(rowIdx)}
+                  />
                 </td>
               )}
             </tr>
@@ -159,10 +159,12 @@ const FormTable = <TFieldValues extends FieldValues>({
           ))}
         </tfoot>
       </table>
-      <FaCirclePlus
-        className="h-8 w-8 text-primary"
-        onClick={() => append({} as MaterialPurchaseInterface)}
-      />
+      <div className="flex justify-end py-2">
+        <FaCirclePlus
+          className="h-8 w-8 text-primary"
+          onClick={() => append({} as MaterialPurchaseInterface)}
+        />
+      </div>
     </div>
   );
 };

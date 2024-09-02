@@ -7,6 +7,7 @@ import {
   CustomColumnDef,
   MaterialPurchaseInterface,
   PurchaseFormValuesInterface,
+  ResponseStatusInterface,
 } from "#/types";
 import { ColumnDef } from "@tanstack/react-table";
 import purchaseMockData from "#/__MOCK__/purchase.json";
@@ -15,7 +16,12 @@ import axios, { AxiosResponse } from "axios";
 import { useAppSelector } from "#/lib/storeHooks";
 import { toast } from "react-hot-toast";
 
-const CreatePurchaseModal = () => {
+interface Props {
+  onClose: () => void;
+  refetch: (url?: string) => void;
+}
+
+const CreatePurchaseModal: React.FC<Props> = ({ onClose, refetch }) => {
   const { data: authData } = useAppSelector((state) => state.auth);
   // ................ STATES ................ //
   const [isLoading, setIsLoading] = useState(false);
@@ -56,18 +62,13 @@ const CreatePurchaseModal = () => {
   });
 
   // ................ HOOKS ................ //
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useForm<PurchaseFormValuesInterface>({
-    defaultValues: {
-      material_purchase: [{} as MaterialPurchaseInterface],
-    },
-    resolver: yupResolver(schema),
-  });
+  const { control, handleSubmit, setValue, reset } =
+    useForm<PurchaseFormValuesInterface>({
+      defaultValues: {
+        material_purchase: [{} as MaterialPurchaseInterface],
+      },
+      resolver: yupResolver(schema),
+    });
 
   const { fields, append, remove } = useFieldArray({
     name: "material_purchase",
@@ -90,7 +91,7 @@ const CreatePurchaseModal = () => {
     {
       accessorKey: "runners_name",
       cell: (info) => info.getValue(),
-      header: () => <span>{"Runner's Name *"}</span>,
+      header: () => <span>{"RUNNER'S NAME *"}</span>,
       inputType: "text",
     },
     {
@@ -118,7 +119,7 @@ const CreatePurchaseModal = () => {
     try {
       const response = await axios.post<
         PurchaseFormValuesInterface,
-        AxiosResponse<any>
+        AxiosResponse<ResponseStatusInterface>
       >(
         "https://devapi.propsoft.ai/api/auth/interview/material-purchase",
         data,
@@ -135,6 +136,9 @@ const CreatePurchaseModal = () => {
         response.data?.status_code === "1"
       ) {
         toast.success("Successfully created");
+        reset({ material_purchase: [{}] });
+        onClose();
+        refetch();
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -155,7 +159,9 @@ const CreatePurchaseModal = () => {
         setValue={setValue}
       />
       <div className="flex justify-end">
-        <Button type="submit">Save</Button>
+        <Button isLoading={isLoading} type="submit">
+          Save
+        </Button>
       </div>
     </form>
   );

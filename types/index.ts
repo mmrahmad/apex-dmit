@@ -20,8 +20,8 @@ export type TestimonialType = {
   author: authorType;
 };
 
-interface ResponseStatusInterface {
-  status_code: number;
+export interface ResponseStatusInterface {
+  status_code: string;
   status_message: string;
 }
 
@@ -70,6 +70,12 @@ export interface MaterialPurchase {
   card_number: string;
   transaction_date: string;
 }
+
+export interface PaginationLinksInterface {
+  url: null | string;
+  label: string;
+  active: boolean;
+}
 export interface MaterialPurchaseResponseInterface
   extends ResponseStatusInterface {
   material_purchase_list: {
@@ -79,11 +85,7 @@ export interface MaterialPurchaseResponseInterface
     from: number;
     last_page: number;
     last_page_url: string;
-    links: {
-      url: null | string;
-      label: string;
-      active: boolean;
-    }[];
+    links: PaginationLinksInterface[];
     next_page_url: string;
     path: string;
     per_page: number;

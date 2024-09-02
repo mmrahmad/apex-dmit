@@ -4,17 +4,20 @@ import { RootState } from "#/lib/store";
 import { useAppSelector } from "#/lib/storeHooks";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { Button, Modal } from "../ui";
+import { Button, Loader, Modal } from "../ui";
 import Table from "../ui/Table";
 import CreatePurchaseModal from "./CreatePurchaseModal";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { log } from "console";
+import { MaterialPurchaseResponseInterface } from "#/types";
+import { format } from "date-fns/format";
 
 const PurchasePage = () => {
   const { data } = useAppSelector((state: RootState) => state.auth);
 
-  const [materialPurchaseData, setMaterialPurchaseData] = useState<any>();
-  const [refetch, setRefetch] = useState<string>("");
+  const [materialPurchaseData, setMaterialPurchaseData] =
+    useState<MaterialPurchaseResponseInterface>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const defaultColumns: ColumnDef<any>[] = [
@@ -45,45 +48,57 @@ const PurchasePage = () => {
     },
     {
       accessorKey: "transaction_date",
-      cell: (info) => info.getValue(),
+      cell: (info) =>
+        info.getValue() && format(info.getValue() as string, "dd MMM, yyyy"),
       header: () => <span>TRANSACTION</span>,
     },
   ];
 
-  const onClose = () => setIsModalOpen(false);
+  const onClose = () => {
+    setIsModalOpen(false);
+  };
 
-  const fetchData = async () => {
+  const fetchData = async (
+    url: string = "https://devapi.propsoft.ai/api/auth/interview/material-purchase",
+  ) => {
+    setIsLoading(true);
     try {
-      const response = await axios.get(
-        "https://devapi.propsoft.ai/api/auth/interview/material-purchase",
-        {
-          headers: {
-            Authorization: `Bearer ${data?.access_token}`,
-          },
+      const response = await axios.get<MaterialPurchaseResponseInterface>(url, {
+        headers: {
+          Authorization: `Bearer ${data?.access_token}`,
         },
-      );
-      console.log({ response });
+      });
+      setMaterialPurchaseData(response.data);
     } catch (error) {
       console.error({ error });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [refetch]);
+  }, []);
+
+  if (isLoading) return <Loader />;
 
   return (
     <div>
-      <div className="flex items-center justify-between p-5">
+      <div className="flex flex-col items-center justify-between p-5 md:flex-row">
         <h1 className="text-3xl text-primary">Material Purchase</h1>
-        <Button onClick={() => setIsModalOpen(true)}>
+        <Button className="py-4" onClick={() => setIsModalOpen(true)}>
           Add Material Purchase
         </Button>
       </div>
       <Modal open={isModalOpen} title="Material Purchase" onClose={onClose}>
-        <CreatePurchaseModal />
+        <CreatePurchaseModal onClose={onClose} refetch={fetchData} />
       </Modal>
-      <Table columns={defaultColumns} data={[]} />
+      <Table
+        columns={defaultColumns}
+        data={materialPurchaseData?.material_purchase_list?.data || []}
+        pagination={materialPurchaseData?.material_purchase_list?.links}
+        fetchData={fetchData}
+      />
     </div>
   );
 };

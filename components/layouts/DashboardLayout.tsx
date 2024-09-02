@@ -1,16 +1,19 @@
 "use client";
 import { RootState } from "#/lib/store";
-import { useAppSelector } from "#/lib/storeHooks";
+import { useAppDispatch, useAppSelector } from "#/lib/storeHooks";
 import Image from "next/image";
 import React, { useEffect, useLayoutEffect } from "react";
 import { Loader } from "../ui";
 import { redirect } from "next/navigation";
+import { IoMdLogOut } from "react-icons/io";
+import { removeUser } from "#/lib/slices/authSlice";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const DashboardLayout: React.FC<Props> = ({ children }) => {
+  const dispatch = useAppDispatch();
   const { data } = useAppSelector((state: RootState) => state.auth);
   useLayoutEffect(() => {
     if (!data?.access_token) redirect("/");
@@ -29,6 +32,12 @@ const DashboardLayout: React.FC<Props> = ({ children }) => {
             className="rounded-full"
           />
           <p>{data?.user_data?.email}</p>
+        </div>
+        <div>
+          <IoMdLogOut
+            className="cursor-pointer p-1 text-4xl transition-all duration-200 hover:text-gray-700"
+            onClick={() => dispatch(removeUser())}
+          />
         </div>
       </div>
       {children}
